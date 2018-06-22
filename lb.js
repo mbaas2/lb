@@ -41,7 +41,6 @@ let d=document,el=d.createElement('div');el.id='languageBar';el.innerHTML=
  </style>`
 d.body.appendChild(el)
 let t,ts=[],lb=el.firstChild,bqm=0 //t:textarea or input, lb:language bar, bqm:backquote mode
-let ngnresizeEvent=new CustomEvent("ngn_resize",{});
 let resT=multiplier=>{
 	let ngn = document.body.querySelector('.ngn_lb')
   if (ngn.style.fontSize == "") {
@@ -49,7 +48,7 @@ let resT=multiplier=>{
   }
   ngn.style.fontSize = parseFloat(ngn.style.fontSize) + (multiplier * 0.15) + "em";
 document.body.style.marginTop=ngn.clientHeight+'px';
-document.dispatchEvent(ngnresizeEvent);
+document.dispatchEvent(new CustomEvent("ngn_resize",{}));
 }
 }
 let pd=x=>x.preventDefault()
@@ -81,7 +80,7 @@ let ff=x=>{
   t=t0;if(!t.ngn){t.ngn=1;ts.push(t);ev(t,'keydown',fk)}
 }
 ev(lb,'mousewheel',x=>{resizeText(x.deltaY<0?1:-1);pd(x);return}) // Firefox calls the event differently, but we don't care about them ;-)
-let upd=_=>{d.body.style.marginTop=lb.clientHeight+'px';document.dispatchEvent(ngnresizeEvent)}
+let upd=_=>{d.body.style.marginTop=lb.clientHeight+'px';document.dispatchEvent(new CustomEvent("ngn_resize",{}))}
 upd();ev(window,'resize',upd())
 ev(d,'focus',ff,!0);let ae=d.activeElement;ae&&ff({type:'focus',target:ae})
 })();
