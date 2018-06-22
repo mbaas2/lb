@@ -41,6 +41,17 @@ let d=document,el=d.createElement('div');el.id='languageBar';el.innerHTML=
  </style>`
 d.body.appendChild(el)
 let t,ts=[],lb=el.firstChild,bqm=0 //t:textarea or input, lb:language bar, bqm:backquote mode
+let resT=multiplier=>{
+	let ngnresizeEvent=new CustomEvent("ngn_resize",{});
+	let ngn = document.body.querySelector('.ngn_lb')
+  if (ngn.style.fontSize == "") {
+    ngn.style.fontSize = "1.0em";
+  }
+  ngn.style.fontSize = parseFloat(ngn.style.fontSize) + (multiplier * 0.15) + "em";
+document.body.style.marginTop=ngn.clientHeight+'px';
+document.dispatchEvent(ngnresizeEvent);
+}
+}
 let pd=x=>x.preventDefault()
 let ev=(x,t,f,c)=>x.addEventListener(t,f,c)
 ev(lb,'mousedown',x=>{
@@ -74,13 +85,3 @@ let upd=_=>{d.body.style.marginTop=lb.clientHeight+'px';document.dispatchEvent(n
 upd();ev(window,'resize',upd())
 ev(d,'focus',ff,!0);let ae=d.activeElement;ae&&ff({type:'focus',target:ae})
 })();
-function resizeText(multiplier) {
-	let ngnresizeEvent=new CustomEvent("ngn_resize",{});
-	let ngn = document.body.querySelector('.ngn_lb')
-  if (ngn.style.fontSize == "") {
-    ngn.style.fontSize = "1.0em";
-  }
-  ngn.style.fontSize = parseFloat(ngn.style.fontSize) + (multiplier * 0.15) + "em";
-document.body.style.marginTop=ngn.clientHeight+'px';
-document.dispatchEvent(ngnresizeEvent);
-}
