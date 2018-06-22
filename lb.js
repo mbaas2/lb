@@ -41,8 +41,8 @@ let d=document,el=d.createElement('div');el.id='languageBar';el.innerHTML=
  </style>`
 d.body.appendChild(el)
 let t,ts=[],lb=el.firstChild,bqm=0 //t:textarea or input, lb:language bar, bqm:backquote mode
+let ngnresizeEvent=new CustomEvent("ngn_resize",{});
 let resT=multiplier=>{
-	let ngnresizeEvent=new CustomEvent("ngn_resize",{});
 	let ngn = document.body.querySelector('.ngn_lb')
   if (ngn.style.fontSize == "") {
     ngn.style.fontSize = "1.0em";
