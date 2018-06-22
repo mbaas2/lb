@@ -50,7 +50,6 @@ let resT=multiplier=>{
 document.body.style.marginTop=ngn.clientHeight+'px';
 document.dispatchEvent(new CustomEvent("ngn_resize",{}));
 }
-}
 let pd=x=>x.preventDefault()
 let ev=(x,t,f,c)=>x.addEventListener(t,f,c)
 ev(lb,'mousedown',x=>{
