@@ -27,16 +27,17 @@ let lbh='';for(let i=0;i<lbs.length;i++){
   for(let j=0;j<bqk.length;j++)if(lbs[i][0]===bqv[j])ks.push('\n` '+bqk[j])
   lbh+='<b title="'+he(lbs[i].slice(1)+(ks.length?'\n'+ks.join(''):''))+'">'+lbs[i][0]+'</b>'
 }
-let d=document,el=d.createElement('div');el.innerHTML=
-`<div class=ngn_lb><span class=ngn_x title=Close>❎</span>${lbh}</div>
+let d=document,el=d.createElement('div');el.id='languageBar';el.innerHTML=
+`<div class=ngn_lb><span class=ngn_x title=Close>&#x274E;&#xFE0E;</span><span class="ngn_zoom" id="ngn_plustext" alt="Increase fontsize">&#x2795;</span><span class="ngn_zoom" id="ngn_minustext" alt="Decrease fontsize">&#x2796;</span>${lbh}</div>
  <style>@font-face{font-family:"APL385 Unicode";src:local("APL385 Unicode"),url(//abrudz.github.io/lb/Apl385.woff)format('woff');}</style>
  <style>
   .ngn_lb{position:fixed;top:0;left:0;right:0;background-color:#eee;color:#000;cursor:default;z-index:2147483647;
     font-family:"Apl385 Unicode",monospace;border-bottom:solid #999 1px;padding:2px 2px 0 2px;word-wrap:break-word;}
   .ngn_lb b{cursor:pointer;padding:0 1px;font-weight:normal}
   .ngn_lb b:hover,.ngn_bq .ngn_lb{background-color:#777;color:#fff}
-  .ngn_x{float:right;color:#999;cursor:pointer;margin-top:-3px}
-  .ngn_x:hover{color:#f00}
+  .ngn_x{float:right;color: #f00; cursor:pointer;margin-top:-3px;line-height:1}
+  .ngn_zoom {color: green; float:right;font-size: .7em; margin-top: -3px;}
+  #ngn_plustext{margin-right: .2em;}
  </style>`
 d.body.appendChild(el)
 let t,ts=[],lb=el.firstChild,bqm=0 //t:textarea or input, lb:language bar, bqm:backquote mode
@@ -49,6 +50,8 @@ ev(lb,'mousedown',x=>{
     if(i!=null&&j!=null){t.value=v.slice(0,i)+s+v.slice(j);t.selectionStart=t.selectionEnd=i+s.length}
     pd(x);return
   }
+  if(x.target.id=='ngn_minustext')resizeText(-1);
+  if(x.target.id=='ngn_plustext')resizeText(1);
 })
 let fk=x=>{
   let t=x.target
@@ -66,7 +69,18 @@ let ff=x=>{
   if(nn!=='textarea'&&(nn!=='input'||t0.type!=='text'&&t0.type!=='search'))return
   t=t0;if(!t.ngn){t.ngn=1;ts.push(t);ev(t,'keydown',fk)}
 }
-let upd=_=>{d.body.style.marginTop=lb.clientHeight+'px'}
-upd();ev(window,'resize',upd)
+ev(lb,'mousewheel',x=>{resizeText(x.deltaY<0?1:-1);pd(x);return}) // Firefox calls the event differently, but we don't care about them ;-)
+let upd=_=>{d.body.style.marginTop=lb.clientHeight+'px';document.dispatchEvent(ngnresizeEvent)}
+upd();ev(window,'resize',upd())
 ev(d,'focus',ff,!0);let ae=d.activeElement;ae&&ff({type:'focus',target:ae})
 })();
+function resizeText(multiplier) {
+	let ngnresizeEvent=new CustomEvent("ngn_resize",{});
+	let ngn = document.body.querySelector('.ngn_lb')
+  if (ngn.style.fontSize == "") {
+    ngn.style.fontSize = "1.0em";
+  }
+  ngn.style.fontSize = parseFloat(ngn.style.fontSize) + (multiplier * 0.15) + "em";
+document.body.style.marginTop=ngn.clientHeight+'px';
+document.dispatchEvent(ngnresizeEvent);
+}
